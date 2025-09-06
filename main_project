@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ghoniem Ibrahim — Civil Safety & Fire Protection Expert">
+    <title>Ghoniem Ibrahim - Civil Safety & Fire Protection Expert</title>
+
+    <!-- Fonts: Inter for English, Cairo for Arabic handwriting aesthetics -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Theme variables (fire‑extinguisher inspired).  
+           We define a set of custom properties for both light and dark modes. The dark values live in
+           a `.dark` context on `body`. A few additional variables (like --nav-bg) are used to
+           maintain consistent backgrounds on fixed elements such as the navigation bar. */
+        :root{
+            --fe-red:#c62828; /* main extinguisher red */
+            --fe-red-2:#d32f2f;
+            --fe-accent:#ff7043;
+            /* Light theme colours */
+            --bg:#ffffff;
+            --card:#ffffff;
+            --muted:#6b7280;
+            --text:#1f2937;
+            --nav-bg: rgba(255,255,255,0.95);
+            --glass:rgba(255,255,255,0.06);
+            --shadow:0 8px 30px rgba(11,22,34,0.08);
+            --radius:14px;
+            --transition:all .28s cubic-bezier(.2,.9,.3,1);
+        }
+
+        /* Dark theme overrides. When the `dark` class is applied to the body this block
+           redefines the variables above to suitable alternatives for a night‑time experience. */
+        body.dark{
+            --bg:#071022;
+            --card:#0f172a;
+            --muted:#94a3b8;
+            --text:#f1f5f9;
+            --nav-bg: rgba(7,16,34,0.9);
+            --glass:rgba(255,255,255,0.05);
+            --shadow:0 12px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Arabic-friendly typography when lang=ar */
+        html[lang="ar"] body{font-family: 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+        html:not([lang="ar"]) body{font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+
+        *{box-sizing:border-box}
+        body{margin:0;background:var(--bg);color:var(--text);line-height:1.6}
+
+        /* Layout basics */
+        nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);
+            width:calc(100% - 48px);max-width:1200px;
+            /* Use variable for nav background so that it adapts between light and dark themes. We apply
+               a subtle blur to create a frosted glass effect and a thin border for definition. */
+            background:var(--nav-bg);
+            backdrop-filter:blur(12px);
+            border-radius:12px;
+            padding:10px 18px;
+            display:flex;align-items:center;justify-content:space-between;
+            box-shadow:var(--shadow);
+            border:1px solid rgba(255,255,255,0.1);
+            z-index:999}
+        .nav-left{display:flex;align-items:center;gap:14px}
+        .logo-wrap{display:flex;align-items:center;gap:12px}
+        .logo-sigil{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--fe-red),var(--fe-red-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:0 6px 18px rgba(198,40,40,0.18)}
+        .logo-text{font-weight:700;color:var(--fe-red-2);letter-spacing:.4px}
+        .nav-menu{display:flex;gap:18px;align-items:center}
+        .nav-menu a{color:var(--text);text-decoration:none;padding:8px 12px;border-radius:10px}
+        .nav-menu a:hover{background:var(--glass)}
+
+        .controls{display:flex;align-items:center;gap:10px}
+        .toggle-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 10px;border-radius:8px;cursor:pointer}
+
+        /* Hide mobile-only elements by default */
+        .mobile-only{display:none;}
+
+        /* Hero with extinguisher silhouette accent */
+        #hero{
+            min-height:88vh;
+            display:grid;place-items:center;
+            padding:80px 24px 40px;
+            /* A subtle gradient using the fire‑red hue on top that fades into the page background.  
+               For dark mode the gradient intensifies slightly to stand out against the darker backdrop. */
+            background:linear-gradient(180deg, rgba(214,63,63,0.06), transparent);
+            position:relative;
+            overflow:hidden;
+        }
+        body.dark #hero{
+            background:linear-gradient(180deg, rgba(198,40,40,0.2), transparent);
+        }
+        .hero-card{max-width:1200px;width:100%;
+            /* Card inherits from the --card variable. We avoid baked‑in white gradients to better support dark mode */
+            background:var(--card);
+            border-radius:18px;padding:36px;
+            display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;
+            box-shadow:var(--shadow);
+            border:1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Extinguisher decorative SVG placed behind content */
+        .extinguisher-art{position:absolute;right:24px;top:20px;opacity:0.08;width:420px;height:420px;pointer-events:none}
+
+        .hero-left h1{font-size:2.6rem;margin:0 0 10px;color:var(--fe-red-2)}
+        .hero-left .subtitle{font-size:1.05rem;color:var(--muted);margin-bottom:12px}
+        .hero-left p{color:var(--text);margin-bottom:18px}
+        .hero-ctas{display:flex;gap:12px}
+        .btn{padding:12px 18px;border-radius:12px;border:none;cursor:pointer;font-weight:700}
+        .btn-primary{background:var(--fe-red);color:white;box-shadow:0 10px 30px rgba(198,40,40,0.12)}
+        .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+
+        /* inputs and toggle buttons adapt their border and background colours in dark mode */
+        body.dark input,
+        body.dark textarea,
+        body.dark select,
+        body.dark .toggle-btn{
+            border-color:rgba(255,255,255,0.15) !important;
+            background:var(--card);
+            color:var(--text);
+        }
+        body.dark input::placeholder,
+        body.dark textarea::placeholder{color:var(--muted);}
+
+        /* right column: image placeholders */
+        .hero-right{display:flex;flex-direction:column;gap:12px;align-items:center}
+        .hero-photo{width:360px;height:360px;border-radius:12px;background:linear-gradient(135deg,var(--fe-red),var(--fe-accent));display:flex;align-items:center;justify-content:center;color:white;font-size:48px}
+        .hero-photo.small{width:160px;height:120px;border-radius:10px}
+
+        /* sections */
+        section{padding:72px 20px}
+        .container{max-width:1100px;margin:0 auto}
+        .section-title{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+        .section-title h2{color:var(--fe-red-2);margin:0}
+        .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+
+        /* services grid with extinguisher cap icons */
+        .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+        .service-card{
+            padding:18px;
+            border-radius:12px;
+            background:var(--card);
+            border:1px solid rgba(255,255,255,0.05);
+            box-shadow:var(--shadow);
+            transition:transform .35s var(--transition), box-shadow .35s var(--transition);
+        }
+        .service-card:hover{
+            transform:translateY(-6px) scale(1.02);
+            box-shadow:0 20px 40px rgba(0,0,0,0.3);
+        }
+        .service-icon{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--fe-red),var(--fe-accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;margin-bottom:10px}
+
+        /* RTL adjustments */
+        html[lang="ar"]{direction:rtl}
+        html[lang="ar"] .nav-container, html[lang="ar"] nav{direction:rtl}
+        html[lang="ar"] .hero-card{grid-template-columns:420px 1fr}
+
+        /* responsive */
+        @media (max-width:980px){
+            .hero-card{grid-template-columns:1fr;}
+            .hero-right{order:-1}
+            .services-grid{grid-template-columns:repeat(2,1fr)}
+        }
+
+        @media (max-width:600px){
+            /* Adjust navigation layout on small screens. Hide the full nav links and show a menu toggle. */
+            nav{
+                /* On very small screens the nav spans the full width with small horizontal margins. */
+                left:12px;
+                right:12px;
+                transform:none;
+                width:auto;
+                max-width:calc(100% - 24px);
+                padding:10px 14px;
+            }
+            /* Show mobile-only elements like the menu toggle */
+            .mobile-only{display:block;}
+            /* Hide nav menu by default on small screens */
+            .nav-menu{display:none;}
+            /* When menu is opened via JS toggling, display it as a vertical dropdown */
+            .nav-menu.open{
+                display:flex;
+                flex-direction:column;
+                gap:10px;
+                margin-top:10px;
+                background:var(--card);
+                padding:12px;
+                border-radius:12px;
+                box-shadow:var(--shadow);
+                position:absolute;
+                top:100%;
+                right:0;
+                left:0;
+                z-index:998;
+            }
+            .services-grid{grid-template-columns:1fr}
+            .hero-left h1{font-size:1.9rem}
+
+            /* Hide the brand text on very small screens to save horizontal space */
+            .logo-text{display:none;}
+            /* Ensure no horizontal scrolling occurs on mobile */
+            body{overflow-x:hidden;}
+            /* Stack the contact card columns on mobile for better readability */
+            .contact-card{grid-template-columns:1fr !important;}
+        }
+
+        /* Override hero layout for Arabic on tablet and mobile to prevent overlapping columns */
+        @media (max-width:980px){
+            html[lang="ar"] .hero-card{
+                grid-template-columns:1fr;
+            }
+        }
+
+        /* Further tweaks for very small screens to improve readability */
+        @media (max-width:600px){
+            .hero-card{
+                grid-template-columns:1fr;
+                padding:24px;
+                text-align:center;
+            }
+            .hero-left, .hero-right{
+                text-align:center;
+            }
+            .hero-ctas{
+                justify-content:center;
+                flex-wrap:wrap;
+            }
+        }
+
+        /* Custom styles for new sections */
+        /* Certifications section */
+        .certifications-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+        }
+        .cert-card{
+            background:linear-gradient(135deg,#173b6c,#2a519d);
+            border-radius:12px;
+            padding:24px;
+            color:#fff;
+            text-align:center;
+            box-shadow:var(--shadow);
+        }
+        .cert-card h3{margin:12px 0 8px;font-size:1.3rem;}
+        .cert-card p{color:rgba(255,255,255,0.8);font-size:0.95rem;margin:0;}
+
+        /* Professional services grid */
+        .prof-services-grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:18px;
+        }
+        .prof-service-card{
+            background:var(--card);
+            border-radius:12px;
+            box-shadow:var(--shadow);
+            padding:20px;
+            text-align:center;
+            border:1px solid rgba(255,255,255,0.05);
+        }
+        .prof-service-icon{
+            width:64px;height:64px;
+            border-radius:50%;
+            background:linear-gradient(135deg,var(--fe-red),var(--fe-accent));
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-size:32px;
+            margin:0 auto 10px;
+        }
+        .prof-service-card h3{margin:8px 0;}
+        .prof-service-card p{font-size:0.9rem;color:var(--muted);margin:0;}
+
+        /* Competencies section */
+        .competencies-grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:18px;
+        }
+        .comp-card{
+            background:var(--card);
+            border-radius:12px;
+            box-shadow:var(--shadow);
+            padding:20px;
+            display:flex;
+            gap:14px;
+            align-items:flex-start;
+        }
+        .comp-card .comp-icon{
+            width:40px;height:40px;
+            border-radius:50%;
+            background:linear-gradient(135deg,var(--fe-red),var(--fe-accent));
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:white;
+            font-size:24px;
+        }
+        .comp-card .comp-content h4{margin:0 0 4px;font-weight:700;font-size:1rem;}
+        .comp-card .comp-content p{margin:0;font-size:0.9rem;color:var(--muted);}
+
+        /* Testimonials section */
+        .testimonial-card{
+            background:var(--card);
+            border-radius:12px;
+            box-shadow:var(--shadow);
+            padding:24px;
+            position:relative;
+            line-height:1.5;
+        }
+        .testimonial-card .stars{
+            color:var(--fe-accent);
+            font-size:1.2rem;
+            margin-bottom:8px;
+        }
+        .testimonial-card .author{
+            margin-top:12px;
+            font-weight:700;
+        }
+        .testimonial-card .role{
+            color:var(--muted);
+            font-size:0.9rem;
+        }
+
+        /* Safety compliance section */
+        .safety-section{margin-top:30px;}
+        .safety-section ul{list-style:none;padding:0;margin:0;}
+        .safety-section li{
+            display:flex;
+            gap:8px;
+            align-items:flex-start;
+            padding-left:0;
+            margin-bottom:8px;
+        }
+        .safety-section li::before{
+            content:'✔';
+            position:relative;
+            left:0;
+            top:0;
+            color:var(--fe-red-2);
+            font-size:1rem;
+            line-height:1.2;
+        }
+        .safety-section li p{
+            margin:0;
+            font-size:0.9rem;
+            color:var(--muted);
+        }
+
+        /* Gallery section */
+        /* Project gallery uses a responsive grid.  Rather than fixing the row height we
+           leverage the CSS `aspect-ratio` property to maintain consistent proportions for
+           every thumbnail, regardless of the original image dimensions.  Each item will
+           auto‑fit into the available space while preserving a 4:3 aspect ratio. */
+        .gallery-grid{
+            display:grid;
+            /* Use exactly three equal columns on large screens to ensure a balanced layout.
+               Media queries below will adapt the column count on smaller devices. */
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+        }
+        .gallery-grid img{
+            width:100%;
+            /* Maintain a 4:3 aspect ratio for all thumbnails; use object-fit to crop
+               oversized images while centering important content. */
+            aspect-ratio:4/3;
+            object-fit:cover;
+            object-position:center;
+            border-radius:12px;
+            box-shadow:var(--shadow);
+        }
+
+        /* Responsive adjustments for new sections */
+        @media (max-width:980px){
+            .certifications-grid{grid-template-columns:repeat(2,1fr);}
+            .prof-services-grid{grid-template-columns:1fr;}
+            .competencies-grid{grid-template-columns:1fr;}
+            .gallery-grid{grid-template-columns:1fr 1fr;}
+        }
+        @media (max-width:600px){
+            .certifications-grid{grid-template-columns:1fr;}
+            .gallery-grid{grid-template-columns:1fr;}
+            .comp-card{flex-direction:column;align-items:center;text-align:center;}
+            .comp-card .comp-icon{margin-bottom:8px;}
+        }
+
+        /* minor animations */
+        .fade-up{transform:translateY(10px);opacity:0;animation:fadeUp .6s forwards}
+        @keyframes fadeUp{to{transform:none;opacity:1}}
+
+        /* Decorative floating sparks to give the hero section a sense of life.  
+           Each spark travels upward and slowly fades out; multiple elements with different
+           durations and delays are used to create variety. */
+        .sparks{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+        .sparks span{
+            position:absolute;
+            bottom:-40px;
+            width:6px;height:6px;
+            background:var(--fe-accent);
+            border-radius:50%;
+            opacity:0.8;
+            animation:sparkFloat var(--dur) linear infinite;
+            left:var(--left);
+            animation-delay:var(--delay);
+            filter:blur(0.5px);
+        }
+        @keyframes sparkFloat{
+            from{transform:translateY(0) scale(1);opacity:0.8}
+            to{transform:translateY(-120vh) scale(1.3);opacity:0}
+        }
+        /* screen-reader only utility class */
+        .sr-only{
+            position:absolute;
+            width:1px;
+            height:1px;
+            padding:0;
+            margin:-1px;
+            overflow:hidden;
+            clip:rect(0,0,0,0);
+            white-space:nowrap;
+            border:0;
+        }
+        /* simple vertical timeline styling */
+        .timeline{
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+        .timeline li{
+            position:relative;
+            padding-left:20px;
+            margin-bottom:18px;
+        }
+        .timeline li::before{
+            content:'';
+            position:absolute;
+            left:0;
+            top:6px;
+            width:6px;
+            height:6px;
+            background:var(--fe-red-2);
+            border-radius:50%;
+        }
+        .timeline li strong{
+            display:block;
+            font-weight:700;
+            color:var(--fe-red-2);
+        }
+        .timeline li span{
+            font-size:0.9rem;
+            color:var(--muted);
+        }
+        .timeline li p{
+            margin:4px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<nav aria-label="Main Navigation">
+    <div class="nav-left">
+        <div class="logo-wrap">
+            <div class="logo-sigil" aria-hidden="true">G</div>
+            <div class="logo-text" data-i18n="brand.name">Ghoniem Ibrahim</div>
+        </div>
+        <div class="nav-menu" role="menubar">
+            <a href="#hero" role="menuitem" data-i18n="nav.home">الرئيسية</a>
+            <a href="#about" role="menuitem" data-i18n="nav.about">عني</a>
+            <a href="#experience" role="menuitem" data-i18n="nav.experience">الخبرة</a>
+            <a href="#services" role="menuitem" data-i18n="nav.services">الخدمات</a>
+            <a href="#portfolio" role="menuitem" data-i18n="nav.portfolio">الأعمال</a>
+            <a href="#contact" role="menuitem" data-i18n="nav.contact">اتصل بنا</a>
+        </div>
+    </div>
+
+    <div class="controls">
+        <!-- mobile menu toggle -->
+        <button id="menuToggle" class="toggle-btn mobile-only" aria-label="Toggle menu">☰</button>
+        <!-- language toggle with accessible label -->
+        <button id="langToggle" class="toggle-btn" aria-pressed="true" aria-label="Toggle language">العربية</button>
+        <!-- theme toggle with accessible label -->
+        <button id="themeToggle" class="toggle-btn" aria-pressed="false" aria-label="Toggle theme">☀️</button>
+    </div>
+</nav>
+
+<section id="hero" aria-labelledby="hero-heading">
+    <div class="extinguisher-art" aria-hidden="true">
+        <!-- simple extinguisher silhouette SVG for theme -->
+        <svg viewBox="0 0 200 200" width="420" height="420" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fill-rule="evenodd">
+                <rect x="48" y="24" width="48" height="120" rx="12" fill="#c62828"></rect>
+                <rect x="36" y="12" width="72" height="16" rx="8" fill="#d32f2f"></rect>
+                <circle cx="72" cy="156" r="20" fill="#d32f2f"></circle>
+            </g>
+        </svg>
+    </div>
+
+    <div class="hero-card container">
+        <div class="hero-left fade-up">
+            <h1 id="hero-heading">غنيم إبراهيم</h1>
+            <div class="subtitle" data-i18n="hero.subtitle">خبير الحماية المدنية ومكافحة الحرائق</div>
+            <p data-i18n="hero.lead">مع أكثر من 10 سنوات من الخبرة العملية في سلامة الحريق والحماية المدنية، أقدّم حلولاً شاملة لضمان حماية الممتلكات والأفراد والالتزام بأعلى معايير السلامة.</p>
+
+            <div class="hero-ctas">
+                <a href="#contact" class="btn btn-primary" data-i18n="btn.consult">احصل على استشارة</a>
+                <a href="#portfolio" class="btn btn-ghost" data-i18n="btn.portfolio">عرض الأعمال</a>
+            </div>
+
+            <!-- short stats -->
+            <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">
+                <div class="card" style="min-width:140px;text-align:center">
+                    <div style="font-size:22px;font-weight:800;color:var(--fe-red-2)" class="stat-number" data-target="500">0</div>
+                    <div class="stat-label" data-i18n="stats.projects">المشاريع المكتملة</div>
+                </div>
+                <div class="card" style="min-width:140px;text-align:center">
+                    <div style="font-size:22px;font-weight:800;color:var(--fe-red-2)" class="stat-number" data-target="10">0</div>
+                    <div class="stat-label" data-i18n="stats.years">سنوات الخبرة</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-right fade-up" aria-hidden="false">
+            <!-- big photo placeholder: user will replace with real photo -->
+            <div class="hero-photo" id="profilePhotoPlaceholder" role="img"
+                 aria-label="صورة شخصية افتراضية" data-i18n-aria-label="hero.profile.alt"
+                 data-i18n="hero.photo.text">صورة هنا</div>
+            <div class="hero-photo small card" role="img" aria-label="صورة للميدان" data-i18n-aria-label="hero.field.alt"
+                 data-i18n="hero.field.text">صورة للميدان</div>
+        </div>
+    </div>
+
+    <!-- animated sparks to add life to the hero section -->
+    <div class="sparks" aria-hidden="true">
+        <span style="--left:8%; --dur:10s; --delay:0s;"></span>
+        <span style="--left:22%; --dur:12s; --delay:2s;"></span>
+        <span style="--left:40%; --dur:9s; --delay:4s;"></span>
+        <span style="--left:55%; --dur:14s; --delay:1s;"></span>
+        <span style="--left:70%; --dur:11s; --delay:3s;"></span>
+        <span style="--left:85%; --dur:13s; --delay:5s;"></span>
+    </div>
+</section>
+
+<!-- About -->
+<section id="about">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="about.title">من أنا</h2>
+            <p data-i18n="about.lead">مكرس لخلق بيئات أكثر أمانًا من خلال حلول حماية من الحرائق والحماية المدنية المتقدمة</p>
+        </div>
+
+        <div class="card">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center">
+                <div>
+                    <h3 data-i18n="about.heading">سلامتك أولويتي</h3>
+                    <!-- About description. Added data-i18n so that the paragraph can be properly translated when switching languages. -->
+                    <p data-i18n="about.body">كفني ومهندس مختص في أنظمة السلامة، أعمل على تقييم المخاطر، تصميم وتركيب نظم إطفاء الحريق، وتطوير خطط الطوارئ والتدريب العملي للفرق.</p>
+                    <ul>
+                        <li><span data-i18n="skills.fire.title">منع الحرائق</span> — <span data-i18n="skills.fire.desc">خبير في تقييم مخاطر الحرائق</span></li>
+                        <li><span data-i18n="skills.compliance.title">الالتزام بالسلامة</span> — <span data-i18n="skills.compliance.desc">ضمان الامتثال للمعايير</span></li>
+                        <li><span data-i18n="skills.emergency.title">التخطيط للطوارئ</span> — <span data-i18n="skills.emergency.desc">بروتوكولات استجابة شاملة</span></li>
+                    </ul>
+                </div>
+                <div>
+                <div class="card" style="height:220px;display:flex;align-items:center;justify-content:center" role="img"
+                     aria-label="مساحة فارغة لإضافة صورة أو مخطط" data-i18n-aria-label="placeholder.chart.alt"
+                     data-i18n="placeholder.chart">أضف صورة أو مخطط هنا</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="experience.title">الخبرة</h2>
+            <p data-i18n="experience.lead">رحلتي المهنية في مجال سلامة الحريق والحماية المدنية</p>
+        </div>
+        <div class="card">
+            <ul class="timeline">
+                <li>
+                    <strong data-i18n="exp.1.title">مهندس سلامة حرائق – شركة SafeFire Solutions</strong>
+                    <span data-i18n="exp.1.duration">2018 — الآن</span>
+                    <p data-i18n="exp.1.desc">قيادة فرق التصميم والتفتيش على نظم السلامة في مشاريع كبرى.</p>
+                </li>
+                <li>
+                    <strong data-i18n="exp.2.title">استشاري سلامة – شركة BuildSecure</strong>
+                    <span data-i18n="exp.2.duration">2014 — 2018</span>
+                    <p data-i18n="exp.2.desc">تقديم الاستشارات وتحليل المخاطر للمباني السكنية والصناعية.</p>
+                </li>
+                <li>
+                    <strong data-i18n="exp.3.title">فني أنظمة إطفاء – إدارة الدفاع المدني</strong>
+                    <span data-i18n="exp.3.duration">2010 — 2014</span>
+                    <p data-i18n="exp.3.desc">تركيب وصيانة أنظمة الإطفاء والإنذار في المواقع العامة.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="services.title">الخدمات</h2>
+            <p data-i18n="services.lead">حلول شاملة لصيانة وتركيب نظم مكافحة الحرائق والحماية المدنية</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div style="position:relative;">
+                    <div class="service-icon" role="img" aria-hidden="true">🧯</div>
+                    <span class="sr-only" data-i18n="svc.install.iconLabel">أيقونة طفاية حريق</span>
+                </div>
+                <h3 data-i18n="svc.install.title">تركيب طفايات الحريق</h3>
+                <p data-i18n="svc.install.desc">تركيب احترافي وتحديد مواقع استراتيجية للغطاء الأمثل.</p>
+            </div>
+            <div class="service-card">
+                <div style="position:relative;">
+                    <div class="service-icon" role="img" aria-hidden="true">🔍</div>
+                    <span class="sr-only" data-i18n="svc.inspections.iconLabel">أيقونة الفحوصات</span>
+                </div>
+                <h3 data-i18n="svc.inspections.title">فحوصات السلامة</h3>
+                <p data-i18n="svc.inspections.desc">تدقيقات شاملة لتحديد المخاطر والالتزام باللوائح.</p>
+            </div>
+            <div class="service-card">
+                <div style="position:relative;">
+                    <div class="service-icon" role="img" aria-hidden="true">📋</div>
+                    <span class="sr-only" data-i18n="svc.planning.iconLabel">أيقونة التخطيط للطوارئ</span>
+                </div>
+                <h3 data-i18n="svc.planning.title">التخطيط للطوارئ</h3>
+                <p data-i18n="svc.planning.desc">خطة استجابة مخصصة للمنشأة.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio (single item example) -->
+<section id="portfolio">
+    <div class="container">
+        <div class="section-title"><h2 data-i18n="portfolio.title">الأعمال</h2><p data-i18n="portfolio.lead">عرض تنفيذات ناجحة لحلول سلامة الحريق</p></div>
+        <div class="card">
+            <h3 data-i18n="proj.1.title">مبنى مكاتب تجاري</h3>
+            <p data-i18n="proj.1.desc">تركيب نظام سلامة لحريق لمبنى مكون من 15 طابقًا، بما في ذلك طفايات وأجهزة إنذار.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Certifications -->
+<section id="certifications">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="certifications.title">Professional Certifications</h2>
+            <p data-i18n="certifications.lead">Certified and qualified to the highest industry standards</p>
+        </div>
+        <div class="certifications-grid">
+            <div class="cert-card">
+                <div style="font-size:40px;">🏆</div>
+                <h3 data-i18n="certifications.nfpa.title">NFPA Certified</h3>
+                <p data-i18n="certifications.nfpa.desc">National Fire Protection Association Certified Technician</p>
+            </div>
+            <div class="cert-card">
+                <div style="font-size:40px;">📜</div>
+                <h3 data-i18n="certifications.osha.title">OSHA 30-Hour</h3>
+                <p data-i18n="certifications.osha.desc">Occupational Safety and Health Administration Certification</p>
+            </div>
+            <div class="cert-card">
+                <div style="font-size:40px;">🎖️</div>
+                <h3 data-i18n="certifications.fire.title">Fire Marshal</h3>
+                <p data-i18n="certifications.fire.desc">Certified Fire Marshal and Emergency Response Coordinator</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Professional Services -->
+<section id="proservices">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="proservices.title">Professional Services</h2>
+            <p data-i18n="proservices.lead">Comprehensive fire safety and civil protection solutions tailored to your needs</p>
+        </div>
+        <div class="prof-services-grid">
+            <div class="prof-service-card">
+                <div class="prof-service-icon">🧯</div>
+                <h3 data-i18n="proservices.install.title">Fire Extinguisher Installation</h3>
+                <p data-i18n="proservices.install.desc">Professional installation of fire extinguishers with strategic placement for maximum coverage and accessibility.</p>
+            </div>
+            <div class="prof-service-card">
+                <div class="prof-service-icon">🔍</div>
+                <h3 data-i18n="proservices.inspection.title">Safety Inspections</h3>
+                <p data-i18n="proservices.inspection.desc">Comprehensive safety audits to identify risks and ensure compliance with all relevant regulations.</p>
+            </div>
+            <div class="prof-service-card">
+                <div class="prof-service-icon">📋</div>
+                <h3 data-i18n="proservices.emergency.title">Emergency Planning</h3>
+                <p data-i18n="proservices.emergency.desc">Development of comprehensive emergency response plans tailored to your facility's unique requirements.</p>
+            </div>
+            <div class="prof-service-card">
+                <div class="prof-service-icon">🔧</div>
+                <h3 data-i18n="proservices.maintenance.title">Maintenance Services</h3>
+                <p data-i18n="proservices.maintenance.desc">Regular maintenance and testing of fire safety equipment to ensure optimal performance.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Competencies -->
+<section id="competencies">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="competencies.title">Core Competencies</h2>
+        </div>
+        <div class="competencies-grid">
+            <div class="comp-card">
+                <div class="comp-icon">🔥</div>
+                <div class="comp-content">
+                    <h4 data-i18n="competencies.fire.title">Fire Prevention</h4>
+                    <p data-i18n="competencies.fire.desc">Expert in fire risk assessment and prevention strategies</p>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div class="comp-icon">🔒</div>
+                <div class="comp-content">
+                    <h4 data-i18n="competencies.compliance.title">Safety Compliance</h4>
+                    <p data-i18n="competencies.compliance.desc">Ensuring full compliance with local and international standards</p>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div class="comp-icon">📋</div>
+                <div class="comp-content">
+                    <h4 data-i18n="competencies.emergency.title">Emergency Planning</h4>
+                    <p data-i18n="competencies.emergency.desc">Developing comprehensive emergency response protocols</p>
+                </div>
+            </div>
+            <div class="comp-card">
+                <div class="comp-icon">🔧</div>
+                <div class="comp-content">
+                    <h4 data-i18n="competencies.system.title">System Installation</h4>
+                    <p data-i18n="competencies.system.desc">Professional installation of fire safety equipment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Client Testimonials -->
+<section id="testimonials">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="testimonials.title">Client Testimonials</h2>
+            <p data-i18n="testimonials.lead">What our clients say about our services</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p data-i18n="testimonials.quote1">John's expertise in fire safety is unmatched.</p>
+            <div class="author">
+                <strong data-i18n="testimonials.author1.name">Michael Johnson</strong>
+            </div>
+            <div class="role" data-i18n="testimonials.author1.role">Facility Manager, TechCorp Industries</div>
+        </div>
+    </div>
+</section>
+
+<!-- Safety Standards & Compliance -->
+<section id="safety">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="safety.title">Safety Standards & Compliance</h2>
+            <p data-i18n="safety.lead">Committed to exceeding industry standards and regulatory requirements</p>
+        </div>
+        <div class="safety-section">
+            <ul>
+                <li>
+                    <strong data-i18n="compliance.nfpa.title">NFPA Compliance</strong>
+                    <p data-i18n="compliance.nfpa.desc">Full adherence to National Fire Protection Association codes and standards.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery">
+    <div class="container">
+        <div class="section-title">
+            <h2 data-i18n="gallery.title">Project Gallery</h2>
+            <p data-i18n="gallery.lead">Showcasing our finished projects</p>
+        </div>
+        <div class="gallery-grid">
+            <img src="1.png" alt="Project 1" data-i18n-alt="gallery.image1.alt">
+            <img src="2.png" alt="Project 2" data-i18n-alt="gallery.image2.alt">
+            <img src="3.png" alt="Project 3" data-i18n-alt="gallery.image3.alt">
+            <img src="4.png" alt="Project 4" data-i18n-alt="gallery.image4.alt">
+            <img src="6.png" alt="Project 5" data-i18n-alt="gallery.image5.alt">
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+    <div class="container">
+        <div class="section-title"><h2 data-i18n="contact.title">تواصل معنا</h2><p data-i18n="contact.lead">هل أنت مستعد لتحسين سلامة المنشأة؟ اتصل للحصول على استشارة</p></div>
+        <div class="card contact-card" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+            <div>
+                <h3 data-i18n="contact.info.title">معلومات التواصل</h3>
+                <p>📧 <a id="contactEmail" href="mailto:ghoniem.ibrahim@safetypro.com" style="color:inherit;text-decoration:none">ghoniem.ibrahim@safetypro.com</a></p>
+                <p>📱 <a href="tel:+15551234567" style="color:inherit;text-decoration:none">+1 (555) 123-4567</a></p>
+                <!-- Update location to reflect the user’s region -->
+                <p>📍 <span data-i18n="contact.location">العاشر من رمضان، الشرقية، مصر</span></p>
+            </div>
+            <!-- Replace the old contact form with direct messaging and social links -->
+            <div>
+                <h3 data-i18n="contact.links.title">قنوات التواصل</h3>
+                <p>💬 <a href="https://wa.me/15551234567" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" data-i18n="contact.whatsapp.label">واتساب</a></p>
+                <p>📩 <a href="https://m.me/ghoniem.ibrahim" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" data-i18n="contact.messenger.label">ماسنجر</a></p>
+                <p>📸 <a href="https://instagram.com/ghoniem.ibrahim" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" data-i18n="contact.instagram.label">إنستجرام</a></p>
+                <p>💼 <a href="https://linkedin.com/in/ghoniem-ibrahim" target="_blank" rel="noopener" style="color:inherit;text-decoration:none" data-i18n="contact.linkedin.label">لينكدإن</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer style="padding:40px 20px;background:#0b1220;color:#fff">
+    <div class="container">
+        <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap">
+            <div>
+                <strong>عن Ghoniem Ibrahim</strong>
+                <p style="max-width:320px">شريكك الموثوق في سلامة الحريق والحماية المدنية مع أكثر من 10 سنوات من الخبرة.</p>
+            </div>
+            <div>
+                <strong>روابط سريعة</strong>
+                <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+                    <a href="#services" style="color:inherit;text-decoration:none">الخدمات</a>
+                    <a href="#portfolio" style="color:inherit;text-decoration:none">الأعمال</a>
+                    <a href="#contact" style="color:inherit;text-decoration:none">اتصل بنا</a>
+                </div>
+            </div>
+            <div>
+                <strong>اتصل</strong>
+                <p>📧 <a href="mailto:ghoniem.ibrahim@safetypro.com" style="color:inherit;text-decoration:none">ghoniem.ibrahim@safetypro.com</a></p>
+            </div>
+        </div>
+        <div style="text-align:center;margin-top:20px;opacity:0.7">© 2025 Ghoniem Ibrahim. جميع الحقوق محفوظة.</div>
+    </div>
+</footer>
+
+<!-- Scripts (i18n, toggles, counters, basic validation) -->
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        // i18n dictionary (complete Arabic translations + English)
+        const i18n = {
+            en: {
+                'brand.name':'Ghoniem Ibrahim',
+                'nav.home':'Home','nav.about':'About','nav.experience':'Experience','nav.services':'Services','nav.portfolio':'Portfolio','nav.contact':'Contact',
+                'hero.subtitle':'Civil Safety & Fire Protection Expert','hero.lead':'With over 10 years of hands-on experience in fire safety and civil protection, I deliver comprehensive solutions to protect property and people.','btn.consult':'Get Consultation','btn.portfolio':'View Portfolio',
+                'stats.projects':'Projects Completed','stats.years':'Years Experience',
+                'about.title':'About Me','about.lead':'Dedicated to creating safer environments through expert fire protection and civil safety solutions','about.heading':'Your Safety Is My Priority',
+                'skills.fire.title':'Fire Prevention','skills.fire.desc':'Expert in fire risk assessment', 'skills.compliance.title':'Safety Compliance','skills.emergency.title':'Emergency Planning','skills.emergency.desc':'Comprehensive emergency protocols',
+                'services.title':'Services','services.lead':'Comprehensive fire safety and civil protection solutions',
+                'svc.install.title':'Fire Extinguisher Installation','svc.install.desc':'Professional installation with strategic placement.','svc.inspections.title':'Safety Inspections','svc.planning.title':'Emergency Planning',
+                'svc.inspections.desc':'Comprehensive audits to identify hazards and ensure regulatory compliance.',
+                'svc.planning.desc':'Custom emergency response plan for your facility.',
+                'skills.compliance.desc':'Ensuring compliance with safety regulations',
+                'svc.install.iconLabel':'Fire extinguisher icon','svc.inspections.iconLabel':'Inspection icon','svc.planning.iconLabel':'Planning icon',
+                'experience.title':'Experience','experience.lead':'My professional journey in fire safety and civil protection',
+                'exp.1.title':'Fire Safety Engineer – SafeFire Solutions','exp.1.duration':'2018 — Present','exp.1.desc':'Leading design and inspection teams on major safety projects.',
+                'exp.2.title':'Safety Consultant – BuildSecure','exp.2.duration':'2014 — 2018','exp.2.desc':'Providing consultancy and risk analysis for residential and industrial buildings.',
+                'exp.3.title':'Fire Systems Technician – Civil Defense Department','exp.3.duration':'2010 — 2014','exp.3.desc':'Installing and maintaining fire suppression and alarm systems in public facilities.',
+                'hero.profile.alt':'Profile photo placeholder','hero.field.alt':'Field photo placeholder',
+                'portfolio.title':'Portfolio','portfolio.lead':'Showcasing successful implementations','proj.1.title':'Corporate Office Complex','proj.1.desc':'Installed fire safety systems across a 15-floor office building.',
+                'contact.title':'Get In Touch','contact.lead':'Ready to improve your facility\'s safety? Contact for consultation',
+                'contact.info.title':'Contact Information',
+                'contact.name.label':'Your Name','contact.name.placeholder':'Name',
+                'contact.email.label':'Email','contact.email.placeholder':'example@mail.com',
+                'contact.message.label':'Message','contact.message.placeholder':'Your message',
+                'contact.submit':'Send',
+                // new labels for contact link titles and platforms
+                'contact.links.title':'Social & Messaging',
+                'contact.whatsapp.label':'WhatsApp',
+                'contact.messenger.label':'Messenger',
+                'contact.instagram.label':'Instagram',
+                'contact.linkedin.label':'LinkedIn'
+                ,
+                // additional translations for about description and placeholders
+                'about.body':'As a technician and engineer specializing in safety systems, I assess risks, design and install fire suppression systems, and develop emergency plans and hands-on training for teams.',
+                'hero.photo.text':'Image here',
+                'hero.field.text':'Field image',
+                'placeholder.chart':'Add a photo or diagram here',
+                'placeholder.chart.alt':'Empty space to add an image or diagram',
+                'contact.location':'10th of Ramadan City, Sharqia, Egypt',
+                // Certifications
+                'certifications.title':'Professional Certifications',
+                'certifications.lead':'Certified and qualified to the highest industry standards',
+                'certifications.nfpa.title':'NFPA Certified',
+                'certifications.nfpa.desc':'National Fire Protection Association Certified Technician',
+                'certifications.osha.title':'OSHA 30-Hour',
+                'certifications.osha.desc':'Occupational Safety and Health Administration Certification',
+                'certifications.fire.title':'Fire Marshal',
+                'certifications.fire.desc':'Certified Fire Marshal and Emergency Response Coordinator',
+                // Professional Services
+                'proservices.title':'Professional Services',
+                'proservices.lead':'Comprehensive fire safety and civil protection solutions tailored to your needs',
+                'proservices.install.title':'Fire Extinguisher Installation',
+                'proservices.install.desc':'Professional installation of fire extinguishers with strategic placement for maximum coverage and accessibility.',
+                'proservices.inspection.title':'Safety Inspections',
+                'proservices.inspection.desc':'Comprehensive safety audits to identify risks and ensure compliance with all relevant regulations.',
+                'proservices.emergency.title':'Emergency Planning',
+                'proservices.emergency.desc':'Development of comprehensive emergency response plans tailored to your facility\'s unique requirements.',
+                'proservices.maintenance.title':'Maintenance Services',
+                'proservices.maintenance.desc':'Regular maintenance and testing of fire safety equipment to ensure optimal performance.',
+                // Core Competencies
+                'competencies.title':'Core Competencies',
+                'competencies.fire.title':'Fire Prevention',
+                'competencies.fire.desc':'Expert in fire risk assessment and prevention strategies',
+                'competencies.compliance.title':'Safety Compliance',
+                'competencies.compliance.desc':'Ensuring full compliance with local and international standards',
+                'competencies.emergency.title':'Emergency Planning',
+                'competencies.emergency.desc':'Developing comprehensive emergency response protocols',
+                'competencies.system.title':'System Installation',
+                'competencies.system.desc':'Professional installation of fire safety equipment',
+                // Client Testimonials
+                'testimonials.title':'Client Testimonials',
+                'testimonials.lead':'What our clients say about our services',
+                'testimonials.quote1':'John\'s expertise in fire safety is unmatched.',
+                'testimonials.author1':'MJ',
+                'testimonials.author1.name':'Michael Johnson',
+                'testimonials.author1.role':'Facility Manager, TechCorp Industries',
+                // Safety Standards & Compliance
+                'safety.title':'Safety Standards & Compliance',
+                'safety.lead':'Committed to exceeding industry standards and regulatory requirements',
+                'compliance.nfpa.title':'NFPA Compliance',
+                'compliance.nfpa.desc':'Full adherence to National Fire Protection Association codes and standards.',
+                // Gallery
+                'gallery.title':'Project Gallery',
+                'gallery.lead':'Showcasing our finished projects',
+                'gallery.image1.alt':'Fire safety system installation project 1',
+                'gallery.image2.alt':'Fire safety system installation project 2',
+                'gallery.image3.alt':'Fire safety system installation project 3',
+                'gallery.image4.alt':'Fire safety system installation project 4',
+                'gallery.image5.alt':'Fire safety system installation project 5'
+            },
+            ar: {
+                'brand.name':'غنيم إبراهيم',
+                'nav.home':'الرئيسية','nav.about':'عني','nav.experience':'الخبرة','nav.services':'الخدمات','nav.portfolio':'الأعمال','nav.contact':'اتصل بنا',
+                'hero.subtitle':'خبير الحماية المدنية ومكافحة الحرائق',
+                'hero.lead':'مع أكثر من 10 سنوات من الخبرة العملية في سلامة الحريق والحماية المدنية، أقدّم حلولاً شاملة لضمان حماية الممتلكات والأفراد والالتزام بأعلى معايير السلامة.',
+                'btn.consult':'احصل على استشارة','btn.portfolio':'عرض الأعمال',
+                'stats.projects':'المشاريع المكتملة','stats.years':'سنوات الخبرة',
+                'about.title':'من أنا','about.lead':'مكرس لخلق بيئات أكثر أمانًا من خلال حلول حماية من الحرائق والحماية المدنية المتقدمة','about.heading':'سلامتك أولويتي',
+                'skills.fire.title':'منع الحرائق','skills.fire.desc':'خبير في تقييم مخاطر الحرائق','skills.compliance.title':'الالتزام بالسلامة','skills.emergency.title':'التخطيط للطوارئ','skills.emergency.desc':'تطوير بروتوكولات استجابة طوارئ شاملة',
+                'services.title':'الخدمات','services.lead':'حلول شاملة لصيانة وتركيب نظم مكافحة الحرائق والحماية المدنية',
+                'svc.install.title':'تركيب طفايات الحريق','svc.install.desc':'تركيب احترافي وتحديد مواقع استراتيجية للغطاء الأمثل.','svc.inspections.title':'فحوصات السلامة','svc.planning.title':'التخطيط للطوارئ',
+                'svc.inspections.desc':'تدقيقات شاملة لتحديد المخاطر والالتزام باللوائح.','svc.planning.desc':'خطة استجابة مخصصة للمنشأة.',
+                'skills.compliance.desc':'ضمان الامتثال للمعايير',
+                'svc.install.iconLabel':'أيقونة طفاية حريق','svc.inspections.iconLabel':'أيقونة الفحوصات','svc.planning.iconLabel':'أيقونة التخطيط للطوارئ',
+                'experience.title':'الخبرة','experience.lead':'رحلتي المهنية في مجال سلامة الحريق والحماية المدنية',
+                'exp.1.title':'مهندس سلامة حرائق – شركة SafeFire Solutions','exp.1.duration':'2018 — الآن','exp.1.desc':'قيادة فرق التصميم والتفتيش على نظم السلامة في مشاريع كبرى.',
+                'exp.2.title':'استشاري سلامة – شركة BuildSecure','exp.2.duration':'2014 — 2018','exp.2.desc':'تقديم الاستشارات وتحليل المخاطر للمباني السكنية والصناعية.',
+                'exp.3.title':'فني أنظمة إطفاء – إدارة الدفاع المدني','exp.3.duration':'2010 — 2014','exp.3.desc':'تركيب وصيانة أنظمة الإطفاء والإنذار في المواقع العامة.',
+                'hero.profile.alt':'صورة شخصية افتراضية','hero.field.alt':'صورة للميدان',
+                'portfolio.title':'الأعمال','portfolio.lead':'عرض تنفيذات ناجحة لحلول سلامة الحريق','proj.1.title':'مبنى مكاتب تجاري','proj.1.desc':'تركيب نظام سلامة لمبنى مكون من 15 طابقًا، بما في ذلك طفايات وأجهزة إنذار.',
+                'contact.title':'تواصل معنا','contact.lead':'هل أنت مستعد لتحسين سلامة المنشأة؟ اتصل للحصول على استشارة',
+                'contact.info.title':'معلومات التواصل',
+                'contact.name.label':'اسمك','contact.name.placeholder':'الاسم',
+                'contact.email.label':'البريد الإلكتروني','contact.email.placeholder':'example@mail.com',
+                'contact.message.label':'الرسالة','contact.message.placeholder':'رسالتك',
+                'contact.submit':'أرسل',
+                // new labels for contact link titles and platforms (Arabic)
+                'contact.links.title':'قنوات التواصل',
+                'contact.whatsapp.label':'واتساب',
+                'contact.messenger.label':'ماسنجر',
+                'contact.instagram.label':'إنستجرام',
+                'contact.linkedin.label':'لينكدإن'
+                ,
+                // additional translations for about description and placeholders (Arabic)
+                'about.body':'كفني ومهندس مختص في أنظمة السلامة، أعمل على تقييم المخاطر، تصميم وتركيب نظم إطفاء الحريق، وتطوير خطط الطوارئ والتدريب العملي للفرق.',
+                'hero.photo.text':'صورة هنا',
+                'hero.field.text':'صورة للميدان',
+                'placeholder.chart':'أضف صورة أو مخطط هنا',
+                'placeholder.chart.alt':'مساحة فارغة لإضافة صورة أو مخطط',
+                'contact.location':'العاشر من رمضان، الشرقية، مصر',
+                // Certifications
+                'certifications.title':'الشهادات المهنية',
+                'certifications.lead':'معتمد ومؤهل وفق أعلى معايير الصناعة',
+                'certifications.nfpa.title':'شهادة NFPA',
+                'certifications.nfpa.desc':'فني معتمد من الرابطة الوطنية للحماية من الحرائق',
+                'certifications.osha.title':'دورة OSHA لمدة 30 ساعة',
+                'certifications.osha.desc':'شهادة إدارة السلامة والصحة المهنية',
+                'certifications.fire.title':'قائد إطفاء',
+                'certifications.fire.desc':'شهادة قائد إطفاء ومنسق استجابة الطوارئ',
+                // Professional Services
+                'proservices.title':'الخدمات المهنية',
+                'proservices.lead':'حلول شاملة لسلامة الحريق والحماية المدنية مصممة حسب احتياجاتك',
+                'proservices.install.title':'تركيب طفايات الحريق',
+                'proservices.install.desc':'تركيب احترافي لطفايات الحريق مع تحديد المواقع الاستراتيجية لتحقيق أقصى قدر من التغطية وإمكانية الوصول.',
+                'proservices.inspection.title':'فحوصات السلامة',
+                'proservices.inspection.desc':'عمليات تدقيق سلامة شاملة لتحديد المخاطر وضمان الالتزام بجميع اللوائح ذات الصلة.',
+                'proservices.emergency.title':'التخطيط للطوارئ',
+                'proservices.emergency.desc':'تطوير خطط استجابة طوارئ شاملة مصممة خصيصاً لمتطلبات منشأتك الفريدة.',
+                'proservices.maintenance.title':'خدمات الصيانة',
+                'proservices.maintenance.desc':'الصيانة الدورية واختبار معدات سلامة الحريق لضمان الأداء الأمثل.',
+                // Core Competencies
+                'competencies.title':'مجالات التميز',
+                'competencies.fire.title':'منع الحرائق',
+                'competencies.fire.desc':'خبير في تقييم مخاطر الحرائق واستراتيجيات الوقاية',
+                'competencies.compliance.title':'الالتزام بالسلامة',
+                'competencies.compliance.desc':'ضمان الامتثال الكامل للمعايير المحلية والدولية',
+                'competencies.emergency.title':'التخطيط للطوارئ',
+                'competencies.emergency.desc':'تطوير بروتوكولات استجابة طوارئ شاملة',
+                'competencies.system.title':'تركيب الأنظمة',
+                'competencies.system.desc':'تركيب احترافي لمعدات سلامة الحريق',
+                // Client Testimonials
+                'testimonials.title':'آراء العملاء',
+                'testimonials.lead':'ماذا يقول عملاؤنا عن خدماتنا',
+                'testimonials.quote1':'خبرة جون في سلامة الحريق لا مثيل لها.',
+                'testimonials.author1':'MJ',
+                'testimonials.author1.name':'مايكل جونسون',
+                'testimonials.author1.role':'مدير المنشأة، شركة TechCorp Industries',
+                // Safety Standards & Compliance
+                'safety.title':'معايير السلامة والامتثال',
+                'safety.lead':'ملتزمون بتجاوز معايير الصناعة والمتطلبات التنظيمية',
+                'compliance.nfpa.title':'الامتثال لمعايير NFPA',
+                'compliance.nfpa.desc':'التقيد الكامل بمدونات ومعايير الرابطة الوطنية للحماية من الحرائق',
+                // Gallery
+                'gallery.title':'معرض المشاريع',
+                'gallery.lead':'عرض مشاريعنا المنجزة',
+                'gallery.image1.alt':'مشروع تركيب نظام سلامة الحريق 1',
+                'gallery.image2.alt':'مشروع تركيب نظام سلامة الحريق 2',
+                'gallery.image3.alt':'مشروع تركيب نظام سلامة الحريق 3',
+                'gallery.image4.alt':'مشروع تركيب نظام سلامة الحريق 4',
+                'gallery.image5.alt':'مشروع تركيب نظام سلامة الحريق 5'
+            }
+        };
+
+        // apply translations
+        function apply(lang){
+            document.documentElement.lang = (lang==='ar')? 'ar' : 'en';
+            document.querySelectorAll('[data-i18n]').forEach(el=>{
+                const key = el.getAttribute('data-i18n');
+                if(i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
+            });
+            // some other nodes
+            const heroH = document.getElementById('hero-heading'); if(heroH && lang==='ar') heroH.innerText = 'غنيم إبراهيم'; if(heroH && lang!=='ar') heroH.innerText = 'Ghoniem Ibrahim';
+            // update aria-label attributes for elements with data-i18n-aria-label
+            document.querySelectorAll('[data-i18n-aria-label]').forEach(el=>{
+                const key = el.getAttribute('data-i18n-aria-label');
+                if(i18n[lang] && i18n[lang][key]){
+                    el.setAttribute('aria-label', i18n[lang][key]);
+                }
+            });
+            // update placeholder attributes for elements with data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+                const key = el.getAttribute('data-i18n-placeholder');
+                if(i18n[lang] && i18n[lang][key]){
+                    el.setAttribute('placeholder', i18n[lang][key]);
+                }
+            });
+            // update alt attributes for images with data-i18n-alt
+            document.querySelectorAll('[data-i18n-alt]').forEach(el=>{
+                const key = el.getAttribute('data-i18n-alt');
+                if(i18n[lang] && i18n[lang][key]){
+                    el.setAttribute('alt', i18n[lang][key]);
+                }
+            });
+            // update contact placeholders if needed
+        }
+
+        // toggles
+        const langToggle = document.getElementById('langToggle');
+        const themeToggle = document.getElementById('themeToggle');
+        // default to Arabic UI for this release
+        let currentLang = localStorage.getItem('preferredLang') || 'ar';
+        apply(currentLang);
+        langToggle.innerText = (currentLang==='ar')? 'العربية' : 'EN';
+        langToggle.addEventListener('click', ()=>{
+            currentLang = (currentLang==='ar')? 'en' : 'ar';
+            localStorage.setItem('preferredLang', currentLang);
+            apply(currentLang);
+            langToggle.innerText = (currentLang==='ar')? 'العربية' : 'EN';
+        });
+
+        // theme toggle — swap between light and dark by toggling a CSS class on <body>.
+        let currentTheme = localStorage.getItem('preferredTheme') || 'light';
+        function applyTheme(t){
+            if(t === 'dark'){
+                document.body.classList.add('dark');
+                themeToggle.innerText = '☀️';
+            }else{
+                document.body.classList.remove('dark');
+                themeToggle.innerText = '🌙';
+            }
+            localStorage.setItem('preferredTheme', t);
+        }
+        // initialise theme based on persisted preference
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', ()=>{
+            currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+            applyTheme(currentTheme);
+        });
+
+        // mobile menu toggle: show/hide nav links on small screens
+        const menuToggleBtn = document.getElementById('menuToggle');
+        const navMenu = document.querySelector('.nav-menu');
+        if(menuToggleBtn && navMenu){
+            menuToggleBtn.addEventListener('click', ()=>{
+                navMenu.classList.toggle('open');
+            });
+        }
+
+        // counters
+        document.querySelectorAll('.stat-number').forEach(el=>{
+            const target = +el.getAttribute('data-target') || 0; let cur=0; const step = Math.max(1, Math.floor(target/80));
+            const t = setInterval(()=>{ cur += step; el.innerText = Math.min(cur,target); if(cur>=target) clearInterval(t); },12);
+        });
+
+        // contact form simple validation
+        const form = document.getElementById('contactForm');
+        form && form.addEventListener('submit', e=>{
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim(); const email = document.getElementById('email').value.trim(); const msg = document.getElementById('message').value.trim();
+            if(!name || !email || !msg){ alert((document.documentElement.lang==='ar')? 'الرجاء ملء الحقول المطلوبة' : 'Please fill required fields'); return; }
+            alert((document.documentElement.lang==='ar')? 'تم إرسال الرسالة! (تجريبي)' : 'Message sent! (demo)');
+            form.reset();
+        });
+
+    });
+</script>
+
+</body>
+</html>
